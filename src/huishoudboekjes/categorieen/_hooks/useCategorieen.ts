@@ -4,22 +4,25 @@ import { db, collectionCategorieen } from "../../../firebase";
 import { useCollection } from "../../../hooks/useCollection";
 import { Categorie } from "../../../models/Categorie";
 
-interface useCategorieenResponse
-{
+interface useCategorieenResponse {
   items: Categorie[];
   loading: boolean;
   error: Error | null;
 }
 
-export function useCategorieen(huishoudboekjeId: string) : useCategorieenResponse {
+export function useCategorieen(
+  huishoudboekjeId: string,
+): useCategorieenResponse {
   const qFn = useCallback(
-      (ref: any) => query(ref, where("huishoudboekjeId", "==", huishoudboekjeId)), 
-      [huishoudboekjeId]);
+    (ref: any) => query(ref, where("huishoudboekjeId", "==", huishoudboekjeId)),
+    [huishoudboekjeId],
+  );
 
   const { items, loading, error } = useCollection<Categorie>(
-    db, 
+    db,
     collectionCategorieen,
-    qFn);
+    qFn,
+  );
 
   return { items, loading, error };
 }

@@ -1,11 +1,11 @@
-import type { Firestore } from 'firebase/firestore';
-import { subscribeToCollection } from '../services/firestoreService';
-import { useEffect, useState } from 'react';
+import type { Firestore } from "firebase/firestore";
+import { subscribeToCollection } from "../services/firestoreService";
+import { useEffect, useState } from "react";
 
 export function useCollection<T>(
   db: Firestore,
   colName: string,
-  queryFn?: (ref: any) => any
+  queryFn?: (ref: any) => any,
 ): { items: (T & { id: string })[]; loading: boolean; error: Error | null } {
   const [items, setItems] = useState<(T & { id: string })[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,15 +15,15 @@ export function useCollection<T>(
     const unsubscribe = subscribeToCollection<T>(
       db,
       colName,
-      list => {
+      (list) => {
         setItems(list);
         setLoading(false);
       },
-      err => {
+      (err) => {
         setError(err);
         setLoading(false);
       },
-      queryFn
+      queryFn,
     );
     return unsubscribe;
   }, [db, colName, queryFn]);

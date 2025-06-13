@@ -1,5 +1,5 @@
-import React from 'react';
-import { Select, MenuItem } from '@mui/material';
+import React from "react";
+import { MenuItem, Select } from "@mui/material";
 
 interface Props {
   maand: number;
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const MonthSelector: React.FC<Props> = ({ maand, onChange }) => (
-  <Select value={maand} onChange={e => onChange(Number(e.target.value))}>
+  <Select value={maand} onChange={(e) => onChange(Number(e.target.value))}>
     <MenuItem value={1}>Januari</MenuItem>
     <MenuItem value={2}>Februari</MenuItem>
     <MenuItem value={3}>Maart</MenuItem>

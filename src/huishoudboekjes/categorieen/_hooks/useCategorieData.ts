@@ -1,24 +1,28 @@
-import { useState } from 'react';
-import { useCategorieen } from './useCategorieen';
-import { useNotifier } from '../../../contexts/NotificationContext';
-import { addCategorie } from '../../../services/categorieService';
+import { useState } from "react";
+import { useCategorieen } from "./useCategorieen";
+import { useNotifier } from "../../../contexts/NotificationContext";
+import { addCategorie } from "../../../services/categorieService";
 
 export function useCategorieData(huishoudboekjeId: string) {
-  const { items: categories, loading, error: loadError } = useCategorieen(huishoudboekjeId);
-  const [formError, setFormError] = useState<string>('');
+  const {
+    items: categories,
+    loading,
+    error: loadError,
+  } = useCategorieen(huishoudboekjeId);
   const { notify } = useNotifier();
 
-  async function add(naam: string, maxbudget: number, einddatum: Date | undefined) {
+  async function add(
+    naam: string,
+    maxbudget: number,
+    einddatum: Date | undefined,
+  ) {
     try {
-      setFormError('');
       await addCategorie({ naam, maxbudget, einddatum, huishoudboekjeId });
-      notify('Categorie succesvol toegevoegd');
+      notify("Categorie succesvol toegevoegd");
     } catch (err) {
-      setFormError(
-        err instanceof Error ? err.message : 'Fout bij opslaan van categorie'
-      );
+      console.error(err);
     }
   }
 
-  return { categories, loading, loadError, formError, add };
+  return { categories, loading, loadError, add };
 }

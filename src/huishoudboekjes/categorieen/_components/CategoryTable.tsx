@@ -5,10 +5,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
-} from '@mui/material';
-import { Categorie } from '../../../models/Categorie';
-import { CategoryRow } from './CategoryRow';
+  Paper,
+} from "@mui/material";
+import { Categorie } from "../../../models/Categorie";
+import { CategoryRow } from "./CategoryRow";
 
 interface CategoryRowParameters {
   categories: Categorie[];
@@ -29,7 +29,7 @@ export function CategoryTable({ categories }: CategoryRowParameters) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {categories.map(cat => (
+          {categories.map((cat) => (
             <CategoryRow key={cat.id} category={cat} />
           ))}
         </TableBody>

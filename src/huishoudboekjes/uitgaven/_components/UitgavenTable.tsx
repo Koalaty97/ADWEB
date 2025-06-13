@@ -1,7 +1,15 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { Categorie } from '../../../models/Categorie';
-import { Uitgave } from '../../../models/Uitgave';
-import { UitgaveRow } from './UitgaveRow';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import { Categorie } from "../../../models/Categorie";
+import { Uitgave } from "../../../models/Uitgave";
+import { UitgaveRow } from "./UitgaveRow";
 
 interface Props {
   uitgaven: Uitgave[];
@@ -22,7 +30,7 @@ export function UitgavenTable({ uitgaven, categorieen, isOwner }: Props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {uitgaven.map(u => (
+          {uitgaven.map((u) => (
             <UitgaveRow
               key={u.id}
               uitgaven={u}

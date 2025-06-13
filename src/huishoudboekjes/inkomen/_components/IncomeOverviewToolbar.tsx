@@ -1,11 +1,20 @@
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
-export function IncomeOverviewToolbar({ handleOpen }: { handleOpen: () => void })
-{
-    return(
-        <div style={{ display: 'flex' }}>
-            <h1 style={{ flex: 1 }}>&nbsp; Inkomsten</h1>
-            <Button sx={{ alignSelf: 'anchor-center', mr: '10px' }} variant="contained" onClick={handleOpen}>Toevoegen</Button>
-        </div>
-    )
+export function IncomeOverviewToolbar({
+  handleOpen,
+}: {
+  handleOpen: () => void;
+}) {
+  return (
+    <Box display="flex" justifyContent="space-between" mb={2}>
+      <Typography variant="h4">Inkomsten</Typography>
+      <Button
+        sx={{ alignSelf: "anchor-center" }}
+        variant="contained"
+        onClick={handleOpen}
+      >
+        Toevoegen
+      </Button>
+    </Box>
+  );
 }

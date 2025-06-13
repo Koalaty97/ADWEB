@@ -1,27 +1,52 @@
-import { useState } from 'react';
-import { Modal, Box, TextField, Button, Typography } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-import style from '../../../styles/modal';
+import { useState } from "react";
+import { Modal, Box, TextField, Button, Typography } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import style from "../../../styles/modal";
+import { categorieSchema } from "../../../models/Categorie";
+import { ValidationError } from "yup";
 
 interface AddCategorieModalParameters {
   open: boolean;
   onClose: () => void;
-  onAdd: (naam: string, maxbudget: number, einddatum: Date | undefined) => Promise<void>;
-  error?: string;
+  onAdd: (
+    naam: string,
+    maxbudget: number,
+    einddatum: Date | undefined,
+  ) => Promise<void>;
 }
 
-export function AddCategorieModal({ open, onClose, onAdd, error }: AddCategorieModalParameters) {
-  const [naam, setNaam] = useState<string>('');
+export function AddCategorieModal({
+  open,
+  onClose,
+  onAdd,
+}: AddCategorieModalParameters) {
+  const [naam, setNaam] = useState<string>("");
   const [budget, setBudget] = useState<number>(0);
   const [datum, setDatum] = useState<Date | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>();
 
   const handleSubmit = async () => {
-    await onAdd(naam, budget, datum);
-    onClose();
+    try {
+      categorieSchema.validateSync({
+        naam: naam,
+        maxbudget: budget,
+        einddatum: datum,
+      });
+      await onAdd(naam, budget, datum);
+      onClose();
 
-    setNaam('');
-    setBudget(0);
-    setDatum(undefined);
+      setNaam("");
+      setBudget(0);
+      setDatum(undefined);
+      setError(undefined);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        setError(err.errors.join("\n"));
+        return;
+      }
+
+      console.error(err);
+    }
   };
 
   return (
@@ -31,25 +56,27 @@ export function AddCategorieModal({ open, onClose, onAdd, error }: AddCategorieM
           Categorie toevoegen
         </Typography>
         <TextField
+          required
           label="Naam"
           fullWidth
           margin="normal"
           value={naam}
-          onChange={e => setNaam(e.target.value)}
+          onChange={(e) => setNaam(e.target.value)}
         />
         <TextField
+          required
           label="Max budget"
           type="number"
           fullWidth
           margin="normal"
           value={budget}
-          onChange={e => setBudget(Number(e.target.value))}
+          onChange={(e) => setBudget(Number(e.target.value))}
         />
         <DatePicker
           label="Einddatum"
           value={datum}
-          onChange={newDate => setDatum(newDate || undefined)}
-          slotProps={{ textField: { fullWidth: true, margin: 'normal' } }}
+          onChange={(newDate) => setDatum(newDate || undefined)}
+          slotProps={{ textField: { fullWidth: true, margin: "normal" } }}
         />
         {error && (
           <Typography color="error" variant="body2">

@@ -1,6 +1,6 @@
-import { Divider, ListItem } from '@mui/material';
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { Divider, ListItem } from "@mui/material";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Navbar: React.FC = () => {
   const { user } = useAuth();
@@ -15,8 +15,8 @@ const Navbar: React.FC = () => {
           <ListItem>
             <NavLink to={"/huishoudboekjes"}>Huishoudboekjes</NavLink>
           </ListItem>
-          <Divider/>
-          <ListItem alignItems='center'>
+          <Divider />
+          <ListItem alignItems="center">
             <NavLink to={"/logout"}>Uitloggen</NavLink>
           </ListItem>
         </>

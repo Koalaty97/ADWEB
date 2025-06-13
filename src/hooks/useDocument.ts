@@ -1,10 +1,10 @@
-import type { Firestore } from 'firebase/firestore';
-import { subscribeToDocument } from '../services/firestoreService';
-import { useEffect, useState } from 'react';
+import type { Firestore } from "firebase/firestore";
+import { subscribeToDocument } from "../services/firestoreService";
+import { useEffect, useState } from "react";
 
 export function useDocument<T>(
   db: Firestore,
-  path: string[]
+  path: string[],
 ): { data: T | null; loading: boolean; error: Error | null } {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,14 +14,14 @@ export function useDocument<T>(
     const unsubscribe = subscribeToDocument<T>(
       db,
       path,
-      docData => {
+      (docData) => {
         setData(docData);
         setLoading(false);
       },
-      err => {
+      (err) => {
         setError(err);
         setLoading(false);
-      }
+      },
     );
     return unsubscribe;
   }, [db, ...path]);

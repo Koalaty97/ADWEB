@@ -23,10 +23,13 @@ export function NotifierProvider({ children }: { children: ReactNode }) {
       <Snackbar
         open={snack.open}
         autoHideDuration={3000}
-        onClose={() => setSnack(s => ({ ...s, open: false }))}
+        onClose={() => setSnack((s) => ({ ...s, open: false }))}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert onClose={() => setSnack(s => ({ ...s, open: false }))} severity="success">
+        <Alert
+          onClose={() => setSnack((s) => ({ ...s, open: false }))}
+          severity="success"
+        >
           {snack.msg}
         </Alert>
       </Snackbar>
