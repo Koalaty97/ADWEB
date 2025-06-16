@@ -1,6 +1,5 @@
 import { Huishoudboekje, HuishoudboekjeEntry } from "../models/Huishoudboekje";
 import {
-  addDoc,
   arrayUnion,
   collection,
   doc,
@@ -15,7 +14,7 @@ import { collectionHuishoudboekjes, collectionUsers, db } from "../firebase";
 
 export async function addParticipant(
   huishoudboekId: string,
-  participantUid: string,
+  participantUid: string
 ): Promise<void> {
   const ref = doc(db, "huishoudboekjes", huishoudboekId);
   await updateDoc(ref, {
@@ -49,7 +48,7 @@ export async function AddHuishoudboekje(huishoudboekje: HuishoudboekjeEntry) {
 export async function AddHuishoudeboekjeParticipant(
   id: string,
   userId: string,
-  participantEmail: string,
+  participantEmail: string
 ) {
   const boekje = await GetHuishoudboekjeById(id, userId);
   if (!boekje) {
@@ -71,13 +70,16 @@ export async function AddHuishoudeboekjeParticipant(
 
 export async function GetHuishoudboekjeById(
   id: string,
-  userId: string,
+  userId: string
 ): Promise<Huishoudboekje> {
-  const Collection = collection(db, "huishoudboekjes");
-  const snapshot = await getDoc(doc(db, "huishoudboekjes", id));
-  const data = snapshot.data() as Huishoudboekje;
-  data.id = snapshot.id;
-  return data;
+  const result = await getDoc(doc(db, collectionHuishoudboekjes, id));
+  if (!result) {
+    throw new Error("Huishoudboekje niet gevonden");
+  }
+
+  const huishoudboekje = result.data() as Huishoudboekje;
+
+  return huishoudboekje;
 }
 
 export async function ArchiveerHuishoudboekjes(id: string, userId: string) {
@@ -104,7 +106,7 @@ export async function UpdateHuishoudboekje(huishoudboekje: Huishoudboekje) {
   const document = doc(db, "huishoudboekjes", huishoudboekje.id);
   const boekje = GetHuishoudboekjeById(
     huishoudboekje.id,
-    huishoudboekje.ownerId,
+    huishoudboekje.ownerId
   );
   if (!boekje) {
     throw new Error("Huishoudboekje niet gevonden");
