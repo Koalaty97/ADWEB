@@ -42,14 +42,22 @@ describe("ParticipantsOverview", () => {
 
   it("renders ParticipantsTable and AddParticipantModal", () => {
     render(
-      <ParticipantsOverview huishoudboekjeId="h1" participants={["a@b.com"]} />
+      <ParticipantsOverview
+        huishoudboekjeId="h1"
+        participants={["a@b.com"]}
+        isOwner={true}
+      />
     );
     expect(screen.getByRole("button", { name: /add/i })).toBeInTheDocument();
   });
 
   it("calls openModal when add button is clicked", () => {
     render(
-      <ParticipantsOverview huishoudboekjeId="h1" participants={["a@b.com"]} />
+      <ParticipantsOverview
+        huishoudboekjeId="h1"
+        participants={["a@b.com"]}
+        isOwner={true}
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: /add/i }));
     expect(mockOpenModal).toHaveBeenCalled();
@@ -67,7 +75,11 @@ describe("ParticipantsOverview", () => {
       addParticipant: jest.fn().mockResolvedValue(true),
     });
     render(
-      <ParticipantsOverview huishoudboekjeId="h1" participants={["a@b.com"]} />
+      <ParticipantsOverview
+        huishoudboekjeId="h1"
+        participants={["a@b.com"]}
+        isOwner={true}
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: /modalsubmit/i }));
     await waitFor(() => {
@@ -87,7 +99,11 @@ describe("ParticipantsOverview", () => {
       addParticipant: jest.fn().mockResolvedValue(false),
     });
     render(
-      <ParticipantsOverview huishoudboekjeId="h1" participants={["a@b.com"]} />
+      <ParticipantsOverview
+        huishoudboekjeId="h1"
+        participants={["a@b.com"]}
+        isOwner={true}
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: /modalsubmit/i }));
     await waitFor(() => {

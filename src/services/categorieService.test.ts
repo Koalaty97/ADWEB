@@ -54,6 +54,7 @@ describe("categorieService", () => {
   it("addCategorieUitgave updates budgetOut and budgetRemaining", async () => {
     (getDoc as jest.Mock).mockResolvedValue({
       data: () => ({ budgetOut: 10, maxbudget: 100 }),
+      exists: () => true,
     });
     await categorieService.addCategorieUitgave("cat1", 5);
     expect(updateDoc).toHaveBeenCalledWith(expect.anything(), {
@@ -65,6 +66,7 @@ describe("categorieService", () => {
   it("removeCategorieUitgave updates budgetOut and budgetRemaining", async () => {
     (getDoc as jest.Mock).mockResolvedValue({
       data: () => ({ budgetOut: 10, maxbudget: 100 }),
+      exists: () => true,
     });
     await categorieService.removeCategorieUitgave("cat1", 5);
     expect(updateDoc).toHaveBeenCalledWith(expect.anything(), {

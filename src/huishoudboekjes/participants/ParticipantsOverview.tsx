@@ -6,11 +6,13 @@ import { useParticipantsOverview } from "./_hooks/useParticipantsOverview";
 interface ParticipantsOverviewParameters {
   huishoudboekjeId: string;
   participants: string[];
+  isOwner: boolean;
 }
 
 const ParticipantsOverview: React.FC<ParticipantsOverviewParameters> = ({
   huishoudboekjeId,
   participants,
+  isOwner,
 }) => {
   const { notify } = useNotifier();
   const {
@@ -31,7 +33,11 @@ const ParticipantsOverview: React.FC<ParticipantsOverviewParameters> = ({
 
   return (
     <>
-      <ParticipantsTable participants={participants} onAddClick={openModal} />
+      <ParticipantsTable
+        participants={participants}
+        onAddClick={openModal}
+        isOwner={isOwner}
+      />
       <AddParticipantModal
         open={open}
         email={email}

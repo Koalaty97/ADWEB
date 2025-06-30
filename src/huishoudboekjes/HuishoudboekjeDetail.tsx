@@ -38,6 +38,7 @@ const DetailHuishoudboekjePage: React.FC = () => {
       <ParticipantsOverview
         huishoudboekjeId={huishoudboekje.id}
         participants={huishoudboekje.participants}
+        isOwner={isOwner}
       />
     </Box>
   );

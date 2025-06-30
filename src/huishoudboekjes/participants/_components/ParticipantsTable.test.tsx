@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ParticipantsTable } from "./ParticipantsTable";
 
@@ -17,6 +16,7 @@ describe("ParticipantsTable", () => {
       <ParticipantsTable
         participants={["a@b.com", "b@c.com"]}
         onAddClick={onAddClick}
+        isOwner={true}
       />
     );
     expect(screen.getByText(/leden/i)).toBeInTheDocument();
