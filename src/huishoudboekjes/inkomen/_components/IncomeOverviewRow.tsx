@@ -4,6 +4,8 @@ import { Inkomst } from "../../../models/Inkomst";
 import { deleteInkomst } from "../../../services/inkomstenService";
 import { CSS } from "@dnd-kit/utilities";
 import { Categorie } from "../../../models/Categorie";
+import { useState } from "react";
+import { EditInkomstModal } from "./EditInkomstModal";
 
 export function IncomeRow({
   inkomen,
@@ -14,6 +16,8 @@ export function IncomeRow({
   categorieen: Categorie[];
   isOwner: boolean;
 }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const verwijderen = async (inkomst: Inkomst) => {
     await deleteInkomst(inkomst.id);
   };
@@ -41,11 +45,31 @@ export function IncomeRow({
       </TableCell>
       <TableCell>
         {isOwner && (
-          <Button variant="contained" onClick={(_) => verwijderen(inkomen)}>
+          <Button
+            sx={{ alignSelf: "anchor-center", mr: "10px" }}
+            variant="contained"
+            onClick={() => setModalOpen(true)}
+          >
+            Aanpassen
+          </Button>
+        )}
+        {isOwner && (
+          <Button
+            sx={{ alignSelf: "anchor-center", mr: "10px" }}
+            variant="contained"
+            onClick={(_) => verwijderen(inkomen)}
+          >
             Verwijderen
           </Button>
         )}
       </TableCell>
+
+      <EditInkomstModal
+        inkomst={inkomen}
+        categorieen={categorieen}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </TableRow>
   );
 }

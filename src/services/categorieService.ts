@@ -1,6 +1,7 @@
 import { Categorie, CategorieEntry } from "../models/Categorie";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   setDoc,
@@ -57,11 +58,14 @@ export async function removeCategorieInkomst(id: string, hoeveel: number) {
 }
 
 export async function addCategorieUitgave(id: string, hoeveel: number) {
+  if (id == "") {
+    return;
+  }
   const docRef = doc(db, collectionCategorieen, id);
   const categorie = await getDoc(docRef);
 
-  if (!categorie) {
-    throw new Error("Categorie kan niet worden gevonden");
+  if (!categorie.exists()) {
+    return;
   }
 
   const newBudgetOut = (categorie.data()!.budgetOut as number) + hoeveel;
@@ -74,11 +78,15 @@ export async function addCategorieUitgave(id: string, hoeveel: number) {
 }
 
 export async function removeCategorieUitgave(id: string, hoeveel: number) {
+  if (id == "") {
+    return;
+  }
+
   const docRef = doc(db, collectionCategorieen, id);
   const categorie = await getDoc(docRef);
 
-  if (!categorie) {
-    throw new Error("Categorie kan niet worden gevonden");
+  if (!categorie.exists()) {
+    return;
   }
   const newBudgetOut = (categorie.data()!.budgetOut as number) - hoeveel;
   const budgetRemaining = categorie.data()!.maxbudget - newBudgetOut;
@@ -87,4 +95,30 @@ export async function removeCategorieUitgave(id: string, hoeveel: number) {
     budgetOut: newBudgetOut,
     budgetRemaining: budgetRemaining,
   });
+}
+
+export async function removeCategorie(id: string) {
+  const docRef = doc(db, collectionCategorieen, id);
+  deleteDoc(docRef);
+}
+
+export async function getCategorieById(id: string): Promise<Categorie> {
+  const result = await getDoc(doc(db, collectionCategorieen, id));
+  if (!result.exists()) {
+    throw new Error("Categorie niet gevonden");
+  }
+
+  const categorie = result.data() as Categorie;
+
+  return categorie;
+}
+
+export async function updateCategorie(categorie: Categorie) {
+  const document = doc(db, collectionCategorieen, categorie.id);
+  const cat = getCategorieById(categorie.id);
+  if (!cat) {
+    throw new Error("Categorie niet gevonden");
+  }
+
+  updateDoc(document, categorie);
 }

@@ -104,7 +104,7 @@ export async function OnArchiveerHuishoudboekjes(id: string, userId: string) {
 
 export async function UpdateHuishoudboekje(huishoudboekje: Huishoudboekje) {
   const document = doc(db, "huishoudboekjes", huishoudboekje.id);
-  const boekje = GetHuishoudboekjeById(
+  const boekje = await GetHuishoudboekjeById(
     huishoudboekje.id,
     huishoudboekje.ownerId
   );

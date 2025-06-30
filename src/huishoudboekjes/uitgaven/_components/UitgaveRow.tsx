@@ -4,6 +4,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { Uitgave } from "../../../models/Uitgave";
 import { useDraggable } from "@dnd-kit/core";
 import { deleteUitgave } from "../../../services/uitgavenService";
+import { useState } from "react";
+import { EditUitgaveModal } from "./EditUitgaveModal";
 
 export function UitgaveRow({
   uitgaven,
@@ -14,6 +16,8 @@ export function UitgaveRow({
   categorieen: Categorie[];
   isOwner: boolean;
 }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: uitgaven.id,
     data: { source: "uitgaven" },
@@ -41,11 +45,28 @@ export function UitgaveRow({
       </TableCell>
       <TableCell>
         {isOwner && (
+          <Button
+            sx={{ alignSelf: "anchor-center", mr: "10px" }}
+            variant="contained"
+            onClick={() => setModalOpen(true)}
+          >
+            Aanpassen
+          </Button>
+        )}
+
+        {isOwner && (
           <Button variant="contained" onClick={(_) => verwijderen(uitgaven)}>
             Verwijderen
           </Button>
         )}
       </TableCell>
+
+      <EditUitgaveModal
+        uitgave={uitgaven}
+        categorieen={categorieen}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </TableRow>
   );
 }

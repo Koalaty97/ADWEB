@@ -26,13 +26,19 @@ export function InkomenOverview({
   const { items: categorieen } = useCategorieen(huishoudboekjeId);
   const [modalOpen, setModalOpen] = useState(false);
 
-  if (loading) return <Typography>Loading…</Typography>;
-  if (loadError)
-    return <Typography color="error">{loadError.message}</Typography>;
+  if (loading) {
+    return <Typography>Loading…</Typography>;
+  }
 
+  if (loadError) {
+    return <Typography color="error">{loadError.message}</Typography>;
+  }
   return (
     <div style={{ width: "100%" }}>
-      <IncomeOverviewToolbar handleOpen={() => setModalOpen(true)} />
+      <IncomeOverviewToolbar
+        handleOpen={() => setModalOpen(true)}
+        isOwner={isOwner}
+      />
       <IncomeTable
         inkomsten={inkomsten}
         categorieen={categorieen}

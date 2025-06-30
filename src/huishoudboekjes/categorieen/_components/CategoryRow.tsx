@@ -1,8 +1,19 @@
 import { useDroppable } from "@dnd-kit/core";
-import { TableRow, TableCell } from "@mui/material";
+import { TableRow, TableCell, Button } from "@mui/material";
 import { Categorie } from "../../../models/Categorie";
+import { removeCategorie } from "../../../services/categorieService";
+import { useState } from "react";
+import { EditCategorieModal } from "./EditGategorieModel";
+import { resetInkomstenCategorieByCategorieId } from "../../../services/inkomstenService";
+import { resetUitgavenCategorieByCategorieId } from "../../../services/uitgavenService";
 
-export function CategoryRow({ category }: { category: Categorie }) {
+export function CategoryRow({
+  category,
+  isOwner,
+}: {
+  category: Categorie;
+  isOwner: boolean;
+}) {
   const { isOver, setNodeRef } = useDroppable({
     id: category.id,
     data: { type: "category" },
@@ -14,6 +25,15 @@ export function CategoryRow({ category }: { category: Categorie }) {
   } else if (budgetPercentage > 80) {
     bgcolor = "orange";
   }
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const verwijderen = async (categorie: Categorie) => {
+    await Promise.all([
+      resetUitgavenCategorieByCategorieId(categorie.id),
+      resetInkomstenCategorieByCategorieId(categorie.id),
+      removeCategorie(categorie.id),
+    ]);
+  };
 
   return (
     <TableRow
@@ -29,6 +49,32 @@ export function CategoryRow({ category }: { category: Categorie }) {
       <TableCell>{category.budgetOut}</TableCell>
       <TableCell>{category.budgetRemaining}</TableCell>
       <TableCell>{category.einddatum?.toDate().toLocaleDateString()}</TableCell>
+      <TableCell>
+        {isOwner && (
+          <Button
+            sx={{ alignSelf: "anchor-center", mr: "10px" }}
+            variant="contained"
+            onClick={() => setModalOpen(true)}
+          >
+            Aanpassen
+          </Button>
+        )}
+        {isOwner && (
+          <Button
+            sx={{ alignSelf: "anchor-center", mr: "10px" }}
+            variant="contained"
+            onClick={async (_) => await verwijderen(category)}
+          >
+            Verwijderen
+          </Button>
+        )}
+      </TableCell>
+
+      <EditCategorieModal
+        categorie={category}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </TableRow>
   );
 }

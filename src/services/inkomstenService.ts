@@ -3,9 +3,12 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  query,
   setDoc,
   Timestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { collectionInkomsten, db } from "../firebase";
 import { Inkomst, InkomstEntry } from "../models/Inkomst";
@@ -63,4 +66,45 @@ export async function getInkomstById(id: string): Promise<Inkomst> {
   }
 
   return inkomen.data()! as Inkomst;
+}
+
+export async function resetInkomstenCategorieByCategorieId(
+  categorieId: string
+) {
+  const inkomstenRef = collection(db, collectionInkomsten);
+  const q = query(inkomstenRef, where("categorieId", "==", categorieId));
+  const querySnapshot = await getDocs(q);
+
+  const updates = querySnapshot.docs.map((docSnap) =>
+    updateDoc(docSnap.ref, { categorieId: "" })
+  );
+
+  await Promise.all(updates);
+}
+
+export async function updateInkomst(inkomstId: string, inkomst: InkomstEntry) {
+  const document = doc(db, collectionInkomsten, inkomstId);
+  const ink = await getInkomstById(inkomstId);
+  if (!ink) {
+    throw new Error("Inkomst niet gevonden");
+  }
+
+  const updatedInkomst: Inkomst = {
+    id: inkomstId,
+    huishoudboekjeId: ink.huishoudboekjeId,
+    categorieId: inkomst.categorieId,
+    hoeveelheid: inkomst.hoeveelheid,
+    datum: Timestamp.fromDate(inkomst.datum),
+    maand: inkomst.datum.getMonth() + 1,
+  };
+
+  if (ink.categorieId != "") {
+    await removeCategorieInkomst(ink.categorieId, ink.hoeveelheid);
+  }
+
+  if (inkomst.categorieId != "") {
+    await addCategorieInkomst(inkomst.categorieId, inkomst.hoeveelheid);
+  }
+
+  updateDoc(document, updatedInkomst);
 }

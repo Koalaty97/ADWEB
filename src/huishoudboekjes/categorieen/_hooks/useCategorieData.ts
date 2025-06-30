@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useCategorieen } from "./useCategorieen";
 import { useNotifier } from "../../../contexts/NotificationContext";
 import { addCategorie } from "../../../services/categorieService";
@@ -14,7 +13,7 @@ export function useCategorieData(huishoudboekjeId: string) {
   async function add(
     naam: string,
     maxbudget: number,
-    einddatum: Date | undefined,
+    einddatum: Date | undefined
   ) {
     try {
       await addCategorie({ naam, maxbudget, einddatum, huishoudboekjeId });

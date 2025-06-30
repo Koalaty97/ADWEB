@@ -21,9 +21,11 @@ export function UitgavenOverview({ huishoudboekjeId, isOwner, maand }: any) {
     <div style={{ width: "100%" }}>
       <Box display="flex" justifyContent="space-between" mb={2}>
         <Typography variant="h4">Uitgaven</Typography>
-        <Button variant="contained" onClick={() => setModalOpen(true)}>
-          Toevoegen
-        </Button>
+        {isOwner && (
+          <Button variant="contained" onClick={() => setModalOpen(true)}>
+            Toevoegen
+          </Button>
+        )}
       </Box>
       <UitgavenTable
         uitgaven={uitgaven}

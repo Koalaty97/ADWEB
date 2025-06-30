@@ -23,7 +23,7 @@ const DetailHuishoudboekjePage: React.FC = () => {
   }, [huishoudboekje, user]);
 
   if (loading) return <Typography>Loading...</Typography>;
-  if (error || !huishoudboekje)
+  if (error || !huishoudboekje || huishoudboekje.isDeleted === true)
     return <Typography color="error">Niet gevonden</Typography>;
 
   return (

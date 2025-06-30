@@ -34,7 +34,10 @@ export const DetailGrid: React.FC<DetailGridParameters> = ({
           <CategorieUitgavenGraph huishoudboekjeId={huishoudboekje.id} />
         </div>
         <div className="grid">
-          <CategorieOverview huishoudboekjeId={huishoudboekje.id} />
+          <CategorieOverview
+            huishoudboekjeId={huishoudboekje.id}
+            isOwner={isOwner}
+          />
         </div>
       </div>
       <div className="row">

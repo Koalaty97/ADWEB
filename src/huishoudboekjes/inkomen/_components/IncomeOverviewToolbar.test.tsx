@@ -5,7 +5,7 @@ import { IncomeOverviewToolbar } from "./IncomeOverviewToolbar";
 describe("IncomeOverviewToolbar", () => {
   it("renders title and add button", () => {
     const handleOpen = jest.fn();
-    render(<IncomeOverviewToolbar handleOpen={handleOpen} />);
+    render(<IncomeOverviewToolbar handleOpen={handleOpen} isOwner={true} />);
     expect(screen.getByText(/inkomsten/i)).toBeInTheDocument();
     const btn = screen.getByRole("button", { name: /toevoegen/i });
     expect(btn).toBeInTheDocument();

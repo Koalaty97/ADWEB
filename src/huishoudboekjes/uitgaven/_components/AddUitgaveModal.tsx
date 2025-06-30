@@ -44,6 +44,7 @@ export function AddUitgaveModal({
       onClose();
       setHoeveelheid(0);
       setDatum(new Date());
+      setCategorie("");
       setError(undefined);
     } catch (err) {
       if (err instanceof ValidationError) {
