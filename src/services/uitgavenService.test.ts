@@ -16,8 +16,11 @@ jest.mock("firebase/firestore", () => ({
   doc: jest.fn(),
   setDoc: jest.fn(),
   getDoc: jest.fn(),
+  getDocs: jest.fn(),
   deleteDoc: jest.fn(),
   updateDoc: jest.fn(),
+  where: jest.fn(),
+  query: jest.fn(),
   Timestamp: { fromDate: jest.fn((d) => d) },
 }));
 
@@ -83,5 +86,20 @@ describe("uitgavenService", () => {
     });
     const uitgave = await uitgavenService.getUitgaveById("id1");
     expect(uitgave).toEqual({ id: "id1" });
+  });
+
+  it("resetUitgavenCategorieByCategorieId resets categorieId for all matching uitgaven", async () => {
+    const mockDocs = [{ ref: "ref1" }, { ref: "ref2" }];
+    const mockQuerySnapshot = {
+      docs: mockDocs,
+    };
+    const getDocs = require("firebase/firestore").getDocs;
+    getDocs.mockResolvedValue(mockQuerySnapshot);
+
+    await uitgavenService.resetUitgavenCategorieByCategorieId("cat1");
+
+    expect(getDocs).toHaveBeenCalled();
+    expect(updateDoc).toHaveBeenCalledWith("ref1", { categorieId: "" });
+    expect(updateDoc).toHaveBeenCalledWith("ref2", { categorieId: "" });
   });
 });

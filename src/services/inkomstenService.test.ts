@@ -8,16 +8,22 @@ import {
   deleteDoc,
   updateDoc,
   Timestamp,
+  where,
+  query,
 } from "firebase/firestore";
 import { db, collectionInkomsten } from "../firebase";
+import { get } from "http";
 
 jest.mock("firebase/firestore", () => ({
   collection: jest.fn(),
   doc: jest.fn(),
   setDoc: jest.fn(),
   getDoc: jest.fn(),
+  getDocs: jest.fn(),
   deleteDoc: jest.fn(),
   updateDoc: jest.fn(),
+  where: jest.fn(),
+  query: jest.fn(),
   Timestamp: { fromDate: jest.fn((d) => d) },
 }));
 
@@ -83,5 +89,20 @@ describe("inkomstenService", () => {
     });
     const inkomst = await inkomstenService.getInkomstById("id1");
     expect(inkomst).toEqual({ id: "id1" });
+  });
+
+  it("resetInkomenCategorieByCategorieId resets categorieId for all matching inkomen", async () => {
+    const mockDocs = [{ ref: "ref1" }, { ref: "ref2" }];
+    const mockQuerySnapshot = {
+      docs: mockDocs,
+    };
+    const getDocs = require("firebase/firestore").getDocs;
+    getDocs.mockResolvedValue(mockQuerySnapshot);
+
+    await inkomstenService.resetInkomstenCategorieByCategorieId("cat1");
+
+    expect(getDocs).toHaveBeenCalled();
+    expect(updateDoc).toHaveBeenCalledWith("ref1", { categorieId: "" });
+    expect(updateDoc).toHaveBeenCalledWith("ref2", { categorieId: "" });
   });
 });

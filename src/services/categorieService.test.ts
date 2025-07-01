@@ -5,9 +5,11 @@ import {
   getDoc,
   setDoc,
   updateDoc,
+  deleteDoc,
   Timestamp,
 } from "firebase/firestore";
 import { db, collectionCategorieen } from "../firebase";
+import { hu } from "date-fns/locale";
 
 jest.mock("firebase/firestore", () => ({
   collection: jest.fn(),
@@ -15,6 +17,7 @@ jest.mock("firebase/firestore", () => ({
   getDoc: jest.fn(),
   setDoc: jest.fn(),
   updateDoc: jest.fn(),
+  deleteDoc: jest.fn(),
   Timestamp: { fromDate: jest.fn((d) => d) },
 }));
 
@@ -73,5 +76,30 @@ describe("categorieService", () => {
       budgetOut: 5,
       budgetRemaining: 95,
     });
+  });
+
+  it("removeCategorie calls deleteDoc with correct docRef", async () => {
+    (doc as jest.Mock).mockReturnValue("docRef");
+    await categorieService.removeCategorie("cat1");
+    expect(deleteDoc).toHaveBeenCalledWith("docRef");
+  });
+
+  it("getCategorieById returns categorie data if exists", async () => {
+    const mockCategorie = { id: "cat1", naam: "Test" };
+    (getDoc as jest.Mock).mockResolvedValue({
+      exists: () => true,
+      data: () => mockCategorie,
+    });
+    const result = await categorieService.getCategorieById("cat1");
+    expect(result).toEqual(mockCategorie);
+  });
+
+  it("getCategorieById throws error if not exists", async () => {
+    (getDoc as jest.Mock).mockResolvedValue({
+      exists: () => false,
+    });
+    await expect(categorieService.getCategorieById("cat1")).rejects.toThrow(
+      "Categorie niet gevonden"
+    );
   });
 });
